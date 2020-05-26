@@ -917,8 +917,8 @@ class TransformerWordEmbeddings(TokenEmbeddings):
             # method 2:
             #ids = self.tokenizer.encode(tokenized_string, add_special_tokens=False)
             #subtokenized_sentence = self.tokenizer.build_inputs_with_special_tokens(ids)
-
-            subtokenized_sentences.append(torch.tensor(subtokenized_sentence, dtype=torch.long))
+            #subtokenized_sentences.append(torch.tensor(subtokenized_sentence, dtype=torch.long))
+            
             subtokens = self.tokenizer.convert_ids_to_tokens(subtokenized_sentence)
             # print(subtokens)
 
