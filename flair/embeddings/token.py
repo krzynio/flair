@@ -9,6 +9,10 @@ import torch
 from bpemb import BPEmb
 from transformers import XLNetTokenizer, T5Tokenizer, GPT2Tokenizer, AutoTokenizer, AutoConfig, AutoModel
 
+
+from tokenizers import SentencePieceBPETokenizer
+from tokenizers.processors import RobertaProcessing
+
 import flair
 import gensim
 import os
@@ -817,8 +821,16 @@ class TransformerWordEmbeddings(TokenEmbeddings):
         """
         super().__init__()
 
+        if model == 'roberta_large_transformers':
+            model_dir = "roberta_large_transformers"
+            self.tokenizer = SentencePieceBPETokenizer(f"{model_dir}/vocab.json", f"{model_dir}/merges.txt")
+            getattr(self.tokenizer, "_tokenizer").post_processor = RobertaProcessing(sep=("</s>", 2), cls=("<s>", 0))
+
+
         # load tokenizer and transformer model
-        self.tokenizer = AutoTokenizer.from_pretrained(model)
+        if not self.tokenizer:
+            self.tokenizer = AutoTokenizer.from_pretrained(model)
+        
         config = AutoConfig.from_pretrained(model, output_hidden_states=True)
         self.model = AutoModel.from_pretrained(model, config=config)
 
