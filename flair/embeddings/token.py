@@ -855,9 +855,9 @@ class TransformerWordEmbeddings(TokenEmbeddings):
 
         self.special_tokens = []
         # check if special tokens exist to circumvent error message
-        if self.tokenizer._bos_token:
+        if self.tokenizer.get('_bos_token'):
             self.special_tokens.append(self.tokenizer.bos_token)
-        if self.tokenizer._cls_token:
+        if self.tokenizer.get('_cls_token'):
             self.special_tokens.append(self.tokenizer.cls_token)
 
         # most models have an intial BOS token, except for XLNet, T5 and GPT2
