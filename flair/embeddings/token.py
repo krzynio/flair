@@ -822,17 +822,15 @@ class TransformerWordEmbeddings(TokenEmbeddings):
         super().__init__()
 
         if model == 'roberta_large_transformers':
+            print ("Loading obejście")
             model_dir = "roberta_large_transformers"
             self.tokenizer = SentencePieceBPETokenizer(f"{model_dir}/vocab.json", f"{model_dir}/merges.txt")
             getattr(self.tokenizer, "_tokenizer").post_processor = RobertaProcessing(sep=("</s>", 2), cls=("<s>", 0))
-
-
-        # load tokenizer and transformer model
-        if not self.tokenizer:
+            self.model = AutoModel.from_pretrained(model)
+        else:
             self.tokenizer = AutoTokenizer.from_pretrained(model)
-        
-        config = AutoConfig.from_pretrained(model, output_hidden_states=True)
-        self.model = AutoModel.from_pretrained(model, config=config)
+            config = AutoConfig.from_pretrained(model, output_hidden_states=True)
+            self.model = AutoModel.from_pretrained(model, config=config)
 
         # model name
         self.name = 'transformer-word-' + str(model)
